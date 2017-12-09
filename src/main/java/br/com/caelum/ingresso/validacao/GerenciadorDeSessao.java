@@ -9,33 +9,36 @@ import br.com.caelum.ingresso.model.Sessao;
 
 public class GerenciadorDeSessao {
 	private List<Sessao> sessoesDaSala;
-	
-	public GerenciadorDeSessao(List<Sessao> sessoesDaSala){
+
+	public GerenciadorDeSessao(List<Sessao> sessoesDaSala) {
 		this.sessoesDaSala = sessoesDaSala;
 	}
-	
-	private boolean horarioIsValido (Sessao sessaoExistente, Sessao sessaoAtual){
-		
+
+	private boolean horarioIsValido(Sessao sessaoExistente, Sessao sessaoAtual) {
+
 		LocalDate hoje = LocalDate.now();
-		
+
 		LocalDateTime horarioSessao = sessaoExistente.getHorario().atDate(hoje);
 		LocalDateTime horarioAtual = sessaoAtual.getHorario().atDate(hoje);
-		
+
+		if (horarioSessao.isEqual(horarioAtual))
+			return false;
+
 		boolean ehAntes = horarioAtual.isBefore(horarioSessao);
-		
-		if (ehAntes){
-			
+
+		if (ehAntes) {
+
 			return horarioAtual.plus(sessaoExistente.getFilme().getDuracao()).isBefore(horarioSessao);
-		}else {
-			
+		} else {
+
 			return horarioSessao.plus(sessaoExistente.getFilme().getDuracao()).isBefore(horarioAtual);
 		}
 	}
-	
-	public boolean cabe (Sessao sessaoAtual){
-		
+
+	public boolean cabe(Sessao sessaoAtual) {
+
 		Optional<Boolean> optionalCabe = sessoesDaSala.stream()
-				.map(sessaoExistente -> horarioIsValido(sessaoExistente,sessaoAtual)).reduce(Boolean::logicalAnd);
+				.map(sessaoExistente -> horarioIsValido(sessaoExistente, sessaoAtual)).reduce(Boolean::logicalAnd);
 		return optionalCabe.orElse(true);
 	}
 }
