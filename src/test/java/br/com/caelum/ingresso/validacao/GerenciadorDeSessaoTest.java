@@ -13,6 +13,7 @@ import br.com.caelum.ingresso.model.Sala;
 import br.com.caelum.ingresso.model.Sessao;
 import junit.framework.Assert;
 
+
 @SuppressWarnings("deprecation")
 public class GerenciadorDeSessaoTest {
 	
